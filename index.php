@@ -229,40 +229,43 @@
 					var mobile = $('#mobile').val();
 					var price = $('#price').val();
 					var transRef = 'SAU1718'+Math.floor((Math.random() * 1000000099) + 1); 
-	
-					var handler=PaystackPop.setup({
-						// key: "pk_live_c442d2527d74dc98987d3a4ce431d9b0091db20f",
-						key: "pk_test_8bf3d1be62d63924b7149c85416de7b567b34a38",
-						email: email,
-						amount: (price*100)+(0.075*price),
-						currency: "NGN",
-						ref: transRef,
-						fullName: name,
-						callback: function(response){
-							$.ajax({
-								type: 'POST',
-								url: 'fundAccount.php',
-								data: 'name='+name+'&email='+email+'&amount='+price+'&transRef='+transRef+'&mobile='+mobile,
-									success: function(result){
-									var jResult = JSON.parse(result);
-									if (jResult.success == 1) {
-										var r = confirm("Transaction Successful");
-										if (r == true) {
-										   window.location = "index.php";
-										} else {
-											
+					if(name == "" || email == "" || mobile == "" || price == ""){
+						alert("Please no field should be left blank");
+					}else{
+						var handler=PaystackPop.setup({
+							// key: "pk_live_c442d2527d74dc98987d3a4ce431d9b0091db20f",
+							key: "pk_test_8bf3d1be62d63924b7149c85416de7b567b34a38",
+							email: email,
+							amount: (price*100)+(0.075*price),
+							currency: "NGN",
+							ref: transRef,
+							fullName: name,
+							callback: function(response){
+								$.ajax({
+									type: 'POST',
+									url: 'fundAccount.php',
+									data: 'name='+name+'&email='+email+'&amount='+price+'&transRef='+transRef+'&mobile='+mobile,
+										success: function(result){
+										var jResult = JSON.parse(result);
+										if (jResult.success == 1) {
+											var r = confirm("Transaction Successful");
+											if (r == true) {
+											window.location = "index.php";
+											} else {
+												
+											}
+										}else{
+											alert(jResult.success);
 										}
-									}else{
-										alert(jResult.success);
-									}
-								}   
-							});
-						}, 
-						onClose: function(){
-							alert('window closed');
-						}
-					});
-					handler.openIframe();
+									}   
+								});
+							}, 
+							onClose: function(){
+								alert('window closed');
+							}
+						});
+						handler.openIframe();
+					}
 				});
 			});
 		</script>
