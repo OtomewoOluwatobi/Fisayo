@@ -44,7 +44,7 @@
 	
 	<section class="hero-wrap js-fullheight">
 		<div class="home-slider js-fullheight owl-carousel">
-			<div class="slider-item js-fullheight" style="background-image:url(images/bg_1.jpg);">
+			<div class="slider-item js-fullheight" style="background-image:url(images/fem.jpg);">
 				<div class="overlay-1"></div><div class="overlay-2"></div><div class="overlay-3"></div><div class="overlay-4"></div>
 				<div class="container">
 					<div class="row no-gutters slider-text js-fullheight align-items-center">
