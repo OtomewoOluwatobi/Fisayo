@@ -21,6 +21,8 @@
 
 	<link rel="stylesheet" href="css/flaticon.css">
 	<link rel="stylesheet" href="css/style.css">
+	
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -72,14 +74,14 @@
 			<div class="row">
 				<div class="col-md-5 order-md-last d-flex align-items-stretch">
 					<div class="donation-wrap">
-						<form action="#" class="appointment">
+						<form class="appointment">
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
 										<label for="name">Full Name</label>
 										<div class="input-wrap">
 											<div class="icon"><span class="fa fa-user"></span></div>
-											<input type="text" class="form-control" placeholder="">
+											<input type="text" class="form-control" id="name" placeholder="">
 										</div>
 									</div>
 								</div>
@@ -88,7 +90,7 @@
 										<label for="name">Email Address</label>
 										<div class="input-wrap">
 											<div class="icon"><span class="fa fa-paper-plane"></span></div>
-											<input type="email" class="form-control" placeholder="">
+											<input type="email" class="form-control" id="email" placeholder="">
 										</div>
 									</div>
 								</div>
@@ -97,7 +99,7 @@
 										<label for="name">Mobile Contact</label>
 										<div class="input-wrap">
 											<div class="icon"><span class="fa fa-phone"></span></div>
-											<input type="mobile" class="form-control" placeholder="">
+											<input type="mobile" class="form-control" id="mobile" placeholder="">
 										</div>
 									</div>
 								</div>
@@ -106,7 +108,7 @@
 										<label for="name">Amount</label>
 										<div class="input-wrap">
 											<div class="icon"><span class="fa fa-money"></span></div>
-											<input type="number" class="form-control" placeholder="1000" min="1000">
+											<input type="number" class="form-control" id="price" value="1000" min="1000">
 										</div>
 									</div>
 								</div>
@@ -117,7 +119,7 @@
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<input type="submit" value="Donate Now" class="btn btn-secondary py-3 px-4">
+										<input type="button" value="Donate Now" id="makePayment" class="btn btn-secondary py-3 px-4">
 									</div>
 								</div>
 							</div>
@@ -201,6 +203,52 @@
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 		<script src="js/google-map.js"></script>
 		<script src="js/main.js"></script>
+
+		<script>
+			$(document).ready(function(){
+				$('#makePayment').click(function(){
+					var name = $('#name').val(); 
+					var email = $('#email').val();
+					var mobile = $('#mobile').val();
+					var price = $('#price').val();
+					var transRef = 'SAU1718'+Math.floor((Math.random() * 1000000099) + 1); 
+	
+					var handler=PaystackPop.setup({
+						// key: "pk_live_c442d2527d74dc98987d3a4ce431d9b0091db20f",
+						key: "pk_test_8bf3d1be62d63924b7149c85416de7b567b34a38",
+						email: email,
+						amount: (price*100)+(0.075*price),
+						currency: "NGN",
+						ref: transRef,
+						fullName: name,
+						callback: function(response){
+							$.ajax({
+								type: 'POST',
+								url: 'saveTranx.php',
+								data: 'name='+name+'&email='+email+'&amount='+price+'&transRef='+transRef+'&numOfCopies='+numOfCopies+'&referal='+referal,
+									success: function(result){
+									var jResult = JSON.parse(result);
+									if (jResult.success == 1) {
+										var r = confirm("Transaction Successful");
+										if (r == true) {
+										   window.location = "account/signin.php";
+										} else {
+											
+										}
+									}else{
+										alert(jResult.success);
+									}
+								}   
+							});
+						}, 
+						onClose: function(){
+							alert('window closed');
+						}
+					});
+					handler.openIframe();
+				});
+			});
+		</script>
 		
 	</body>
 	</html>
