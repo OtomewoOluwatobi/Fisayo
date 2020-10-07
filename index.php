@@ -1,3 +1,4 @@
+<?php $conx = mysqli_connect("localhost", "root", "", "fisayofunds_dbase"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,7 +140,15 @@
 								</div>
 								<div class="desc">
 									<div class="text">
-										<strong class="number" data-number="50">0</strong>
+										<strong class="number" data-number="<?php
+											$getV = mysqli_query($conx, "SELECT * FROM `tranz_tb`");
+											$result = mysqli_num_rows($getV);
+											if($result < 1){
+												echo '0';
+											}else{
+												echo $result;
+											}
+										?>">0</strong>
 									</div>
 									<div class="text">
 										<span>Volunteers</span>
@@ -154,7 +163,15 @@
 								</div>
 								<div class="desc">
 									<div class="text">
-										<strong class="number" data-number="24400">0</strong>
+										<strong class="number" data-number="<?php
+											$getS = mysqli_query($conx, "SELECT sum(`price`) AS totalSum FROM `tranz_tb`");
+											$row = mysqli_fetch_assoc($getS);
+											if($row['totalSum'] < 1){
+												echo '0';
+											}else{
+												echo $row['totalSum'];
+											}
+										?>">0</strong>
 									</div>
 									<div class="text">
 										<span>Amount Raised</span>
@@ -186,7 +203,7 @@
 		<!-- loader -->
 		<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
-
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery-migrate-3.0.1.min.js"></script>
 		<script src="js/popper.min.js"></script>
@@ -224,14 +241,14 @@
 						callback: function(response){
 							$.ajax({
 								type: 'POST',
-								url: 'saveTranx.php',
-								data: 'name='+name+'&email='+email+'&amount='+price+'&transRef='+transRef+'&numOfCopies='+numOfCopies+'&referal='+referal,
+								url: 'fundAccount.php',
+								data: 'name='+name+'&email='+email+'&amount='+price+'&transRef='+transRef+'&mobile='+mobile,
 									success: function(result){
 									var jResult = JSON.parse(result);
 									if (jResult.success == 1) {
 										var r = confirm("Transaction Successful");
 										if (r == true) {
-										   window.location = "account/signin.php";
+										   window.location = "index.php";
 										} else {
 											
 										}
